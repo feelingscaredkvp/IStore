@@ -9,7 +9,7 @@ public class NotUniqueProductException extends Exception {
     
     public NotUniqueProductException() {}
     
-    NotUniqueProductException(String detailMessage) {
+    public NotUniqueProductException(String detailMessage) {
         super(detailMessage);
     }
     

@@ -1,7 +1,6 @@
 package istore;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -10,43 +9,29 @@ import java.util.List;
 
 public class Catalog {
 
-    private List<Product> allProducts = new ArrayList<>();
+    private List<Product> allProducts = new ArrayList<>();    
 
     public void showAllProducts() {
         ConsoleIO.printListOfAllProducts(this.allProducts);
     }
 
-    public void addNewProduct() {
+    public void addNewProduct() throws NotUniqueProductException {                        
         Product product = ConsoleIO.getInfoAboutNewProduct();
-        if(!CheckData.isUnique(product, getCollectionOfAllProducts())) {
+        if(!isUnique(product))  {
             allProducts.add(new Product(product.getProductName(), product.getCost()));
         } else {
-            ConsoleIO.informAboutNonUniqueProduct();
+            throw new NotUniqueProductException();
         }
     }
 
-    public void deleteProduct(String nameOfProductForDelete) {
-        boolean flag = false;
-        Iterator<Product> iterator = this.allProducts.iterator();
-        while(iterator.hasNext()) {
-            Product product = iterator.next();
-            if(product.getProductName().equals(nameOfProductForDelete)) {
-                iterator.remove();
-                flag = true;
-                break;
-            }
-        }
-        if(!flag) {
-            ConsoleIO.informAboutNotFoundedProduct();
-        }
+    public void deleteProduct(Product productForRemove) throws ProductNotFoundException {            
+            if(!allProducts.remove(productForRemove)) {
+                throw new ProductNotFoundException();
+            }        
     }
-
-    private List<String> getCollectionOfAllProducts() {
-        List<String> CollectionOfAllProducts = new ArrayList<>();
-        for(Product product : this.allProducts) {
-            CollectionOfAllProducts.add(product.getProductName());
-        }
-        return CollectionOfAllProducts;
+    
+    private boolean isUnique(Product product) {
+        return this.allProducts.contains(product);
     }
 
     public List<Product> getAllProducts() {

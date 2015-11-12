@@ -1,20 +1,25 @@
 package istore;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Vladislav on 11/6/2015.
  */
 public class ConsoleIO {
+    
+    private static BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+    
     public static Product getInfoAboutNewProduct() {
         Product tmpProduct = new Product();
         do {
-            BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
             try {
-                //System.out.println("Add new product:");
+                System.out.println("New product:");
                 System.out.print("Input product name: ");
                 tmpProduct.setProductName(consoleReader.readLine());
                 System.out.print("Input cost of product($): ");
@@ -22,8 +27,8 @@ public class ConsoleIO {
                 if(!CheckData.checkProductName(tmpProduct.getProductName()) || !CheckData.checkCost(tmpProduct.getCost())) {
                     System.out.println("Invalid input data. Try again.");
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch(IOException ex) {
+                Logger.getLogger(ConsoleIO.class.getName()).log(Level.SEVERE, null, ex);
             }
         } while(!CheckData.checkProductName(tmpProduct.getProductName()) || !CheckData.checkCost(tmpProduct.getCost()));
         return tmpProduct;
@@ -31,30 +36,32 @@ public class ConsoleIO {
 
     public static int requestMenuOption() {
         int option= 0;
-        System.out.print("Input Option:");
-        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Input Option:");        
         try {
             option = Integer.parseInt(consoleReader.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(ConsoleIO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return option;
     }
 
-    public static String getNameOfProductForDelete() {
-        String productName = "";
-        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Input name of product:");
+    
+    
+    public static Product getProductForRemove() {
+        
+        Product productForRemove = new Product();    
+        System.out.print("Input name of product:");        
         try {
-            productName = consoleReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return productName;
+            productForRemove.setProductName(consoleReader.readLine());
+            productForRemove.setCost(0);            
+        } catch (IOException ex) {
+            Logger.getLogger(ConsoleIO.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        return productForRemove;
     }
 
     public static void printListOfAllProducts(List<Product> allProducts) {
-        if(allProducts.size() == 0) {
+        if(allProducts.isEmpty()) {
             System.out.println("Catalog is empty yet.");
         } else {
             System.out.println("All products:");
@@ -77,12 +84,18 @@ public class ConsoleIO {
     public static void informAboutUnknownOption() {
         System.out.println("Unknown option.");
     }
-
-    public static void informAboutNotFoundedProduct() {
-        System.out.println("Product not found.");
+    
+    public static void close(Closeable c) {
+     if (c == null) return; 
+        try {
+            c.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConsoleIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+  }
+    
+    public static void closeConsoleReader() {
+        close(consoleReader);
     }
-
-    public static void informAboutNonUniqueProduct() {
-        System.out.println("Product with same name is already added.");
-    }
+    
 }

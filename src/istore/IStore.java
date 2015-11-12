@@ -5,7 +5,9 @@ package istore;
  */
 
 public class IStore {
-    public  static  void main(String[] args) {
+    
+    public  static  void main(String[] args) throws ProductNotFoundException, NotUniqueProductException {
         Menu.run();
     }
+    
 }

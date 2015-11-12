@@ -5,7 +5,8 @@ package istore;
  */
 
 public class Menu {
-    public static void run() {
+    
+    public static void run() throws ProductNotFoundException, NotUniqueProductException {
         Catalog catalog = new Catalog();
         int option = 0;
         ConsoleIO.printMenuList();
@@ -21,14 +22,15 @@ public class Menu {
                     ConsoleIO.printMenuList();
                     break;
                 case 3:
-                    catalog.deleteProduct(ConsoleIO.getNameOfProductForDelete());
+                    catalog.deleteProduct(ConsoleIO.getProductForRemove());
                     ConsoleIO.printMenuList();
                     break;
                 case 4:
+                    ConsoleIO.closeConsoleReader();
                     break;
                 default:
                     ConsoleIO.informAboutUnknownOption();
             }
         }
-    }
+    }    
 }
